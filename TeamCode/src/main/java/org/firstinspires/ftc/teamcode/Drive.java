@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -43,7 +45,14 @@ public class Drive extends LinearOpMode {
                 frontLeft.setPower(angle + vertical + horizontal);
                 backLeft.setPower(angle + (vertical - horizontal));
 
-                telemetry.update();
+                TelemetryPacket packet = new TelemetryPacket();
+                packet.put("x", gamepad1.left_stick_x);
+                packet.put("y", gamepad1.left_stick_y);
+                packet.put("z", gamepad1.right_stick_x);
+                packet.put("t", gamepad1.right_stick_y);
+
+                FtcDashboard dashboard = FtcDashboard.getInstance();
+                dashboard.sendTelemetryPacket(packet);
             }
         }
     }
