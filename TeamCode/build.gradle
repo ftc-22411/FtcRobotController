@@ -23,6 +23,12 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url = 'https://www.matthewo.tech/maven/'
+    }
+}
+
 dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
