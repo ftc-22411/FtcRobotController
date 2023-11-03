@@ -24,18 +24,22 @@ public class Drive extends LinearOpMode {
         DcMotor frontRight = hardwareMap.get(DcMotor.class, "frontright");
         DcMotor backRight = hardwareMap.get(DcMotor.class, "backright");
 
+        DcMotor arm = hardwareMap.get(DcMotor.class, "arm");
+
 
         // Put initialization blocks here.
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
         if (opModeIsActive()) {
-            // Put run blocks here.
+            arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             while (opModeIsActive()) {
                 // Put loop blocks here.
+
 
                 vertical = -gamepad1.left_stick_y;
                 horizontal = gamepad1.left_stick_x;
@@ -45,11 +49,15 @@ public class Drive extends LinearOpMode {
                 frontLeft.setPower(angle + vertical + horizontal);
                 backLeft.setPower(angle + (vertical - horizontal));
 
+                arm.setPower((gamepad1.dpad_up ? 1 : 0) -
+                        (gamepad1.dpad_down && arm.getCurrentPosition() >= 0 ? 1 : 0));
+
                 TelemetryPacket packet = new TelemetryPacket();
-                packet.put("x", gamepad1.left_stick_x);
-                packet.put("y", gamepad1.left_stick_y);
-                packet.put("z", gamepad1.right_stick_x);
-                packet.put("t", gamepad1.right_stick_y);
+                packet.put("Left Stick X", gamepad1.left_stick_x);
+                packet.put("Left Stick Y", gamepad1.left_stick_y);
+                packet.put("Right Stick X", gamepad1.right_stick_x);
+                packet.put("Right Stick Y", gamepad1.right_stick_y);
+                packet.put("Arm Pos", arm.getCurrentPosition());
 
                 FtcDashboard dashboard = FtcDashboard.getInstance();
                 dashboard.sendTelemetryPacket(packet);
