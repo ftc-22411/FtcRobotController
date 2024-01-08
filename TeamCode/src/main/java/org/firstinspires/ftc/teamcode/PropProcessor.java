@@ -14,6 +14,9 @@ public class PropProcessor implements VisionProcessor {
 
 	// Left: 1, Center 2, Right: 3
 	private int propPosition = 0;
+	private static final Rect LEFT_RECT = new Rect(45, 205, 120, 113);
+	private static final Rect CENTER_RECT = new Rect(281, 262, 94, 85);
+	private static final Rect RIGHT_RECT = new Rect(492, 218, 106, 103);
 
 	Telemetry telemetry;
 	public PropProcessor(Telemetry telemetry) {
@@ -27,10 +30,15 @@ public class PropProcessor implements VisionProcessor {
 	@Override
 	public Object processFrame(Mat frame, long captureTimeNanos) {
 		// Directions are from camera perspective
-		Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2HSV);
-		Mat leftMat = new Mat(frame, new Rect(45, 205, 120, 113));
-		Mat centerMat= new Mat(frame, new Rect(281, 262, 94, 85));
-		Mat rightMat= new Mat(frame, new Rect(492, 218, 106, 103));
+		Mat hsvFrame = new Mat();
+		Imgproc.cvtColor(frame, hsvFrame, Imgproc.COLOR_RGB2HSV);
+		Mat leftMat = new Mat(hsvFrame, LEFT_RECT);
+		Mat centerMat= new Mat(hsvFrame, CENTER_RECT);
+		Mat rightMat= new Mat(hsvFrame, RIGHT_RECT);
+
+		Imgproc.rectangle(frame, LEFT_RECT, new Scalar(0, 255, 0));
+		Imgproc.rectangle(frame, CENTER_RECT, new Scalar(0, 255, 0));
+		Imgproc.rectangle(frame, RIGHT_RECT, new Scalar(0, 255, 0));
 
 		double leftSat = Core.mean(leftMat).val[1];
 		double centerSat = Core.mean(centerMat).val[1];
@@ -47,7 +55,6 @@ public class PropProcessor implements VisionProcessor {
 		telemetry.addData("Right Mean", rightSat);
 		
 		telemetry.update();
-		Imgproc.cvtColor(frame, frame, Imgproc.COLOR_HSV2RGB);
 		return null;
 
 	}
