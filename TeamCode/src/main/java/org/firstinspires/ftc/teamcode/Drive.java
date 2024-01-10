@@ -49,6 +49,8 @@ public class Drive extends LinearOpMode {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         waitForStart();
         if (opModeIsActive()) {
@@ -64,6 +66,7 @@ public class Drive extends LinearOpMode {
                 backRight.setPower((-angle +  vertical + horizontal) * speed);
                 frontLeft.setPower(( angle +  vertical + horizontal) * speed);
                 backLeft.setPower(( angle + (vertical - horizontal)) * speed);
+
 
                 if(gamepad1.a) speed = .5f;
                 else if (gamepad1.b) speed = .25f;

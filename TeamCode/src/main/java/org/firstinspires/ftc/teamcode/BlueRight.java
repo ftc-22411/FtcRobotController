@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -22,18 +24,30 @@ public class BlueRight extends LinearOpMode {
         Pose2d beginPose = new Pose2d(-36, 60, -Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
+        Servo hookArm = hardwareMap.get(Servo.class, "Hook Arm");
+
         waitForStart();
 //        int propPosition = pipeline.GetPropPosition();
+        hookArm.setPosition(.55);
         int propPosition = 1;
         if(opModeIsActive()) {
             switch (propPosition) {
                 case 1:
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .splineTo(new Vector2d(-40, 31), -Math.PI / 2)
-                                    .turnTo(Math.PI)
-                                    .lineToX(36)
-                                    .splineToConstantHeading(new Vector2d( 60, 60), Math.PI)
+                                    .setTangent(0)
+                                    .splineToLinearHeading(new Pose2d(8.0, 35.0, Math.PI), -Math.PI)
+
+                                    // Place purple pixel
+                                    .stopAndAdd(new SleepAction(.5))
+
+                                    .strafeTo(new Vector2d(36.0, 31.0))
+
+                                    // Place yellow pixel
+                                    .stopAndAdd(new SleepAction(.5))
+
+                                    .setTangent(Math.PI / 2)
+                                    .splineToConstantHeading(new Vector2d(48.0, 60.0), 0.0)
                                     .build());
                     break;
 
