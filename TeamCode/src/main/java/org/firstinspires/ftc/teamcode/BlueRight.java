@@ -21,58 +21,78 @@ public class BlueRight extends LinearOpMode {
     public void runOpMode() {
         propVision = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Webcam"), pipeline);
 
-        Pose2d beginPose = new Pose2d(-36, 60, -Math.PI / 2);
+        Pose2d beginPose = new Pose2d(-32, 62, -Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
         Servo hookArm = hardwareMap.get(Servo.class, "Hook Arm");
 
         waitForStart();
-//        int propPosition = pipeline.GetPropPosition();
+
         hookArm.setPosition(.55);
-        int propPosition = 1;
+
+        int propPosition = pipeline.GetPropPosition();
         if(opModeIsActive()) {
             switch (propPosition) {
                 case 1:
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .setTangent(0)
-                                    .splineToLinearHeading(new Pose2d(8.0, 35.0, Math.PI), -Math.PI)
+                                    .setTangent(Math.PI)
+                                    .splineToLinearHeading(new Pose2d(-38, 32, Math.PI), 0)
 
-                                    // Place purple pixel
+                                    // Place Purple Pixel
                                     .stopAndAdd(new SleepAction(.5))
 
-                                    .strafeTo(new Vector2d(36.0, 31.0))
+                                    .setTangent(Math.PI / 8)
+                                    .splineToConstantHeading(new Vector2d(-10, 36.0), 0)
+                                    .splineToConstantHeading(new Vector2d(36.0, 31.0), 0)
 
                                     // Place yellow pixel
                                     .stopAndAdd(new SleepAction(.5))
 
                                     .setTangent(Math.PI / 2)
-                                    .splineToConstantHeading(new Vector2d(48.0, 60.0), 0.0)
+                                    .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
                                     .build());
                     break;
 
                 case 2:
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .splineTo(new Vector2d(-38, 34), -Math.PI / 2)
-                                    .turnTo(Math.PI)
-                                    .waitSeconds(1)
-                                    .lineToX(36)
-                                   // .lineToY(60)
-                                    //.lineToX(48)
+                                    .setTangent(-Math.PI * .6)
+                                    .splineToLinearHeading(new Pose2d(-38, 32, -Math.PI / 2), -Math.PI * .5)
+
+                                    // Place Purple Pixel
+                                    .stopAndAdd(new SleepAction(.5))
+
+                                    .setReversed(true)
+                                    .splineToConstantHeading(new Vector2d(-30.0, 36), 0)
+                                    .splineToConstantHeading(new Vector2d(0, 36), 0)
+                                    .splineToSplineHeading(new Pose2d(36.0, 31.0, Math.PI), 0)
+
+                                    // Place yellow pixel
+                                    .stopAndAdd(new SleepAction(.5))
+
+                                    .setTangent(Math.PI / 2)
+                                    .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
                                     .build());
                     break;
 
                 case 3:
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .splineTo(new Vector2d(-40, 31), -Math.PI / 2)
-                                    .turnTo(Math.PI)
-                                    .lineToX(-24)
-                                    .waitSeconds(1)
-                                    .lineToX(36)
-                                    //.lineToY(60)
-                                    //.lineToX(48)
+                                    .setTangent(Math.PI)
+                                    .splineToSplineHeading(new Pose2d(-30, 36, Math.PI), 0)
+                                    .strafeTo(new Vector2d(-16, 36))
+
+                                    // Place Purple Pixel
+                                    .stopAndAdd(new SleepAction(.5))
+                                    .setTangent(0)
+                                    .splineToConstantHeading(new Vector2d(36.0, 31.0), 0)
+
+                                    // Place yellow pixel
+                                    .stopAndAdd(new SleepAction(.5))
+
+                                    .setTangent(Math.PI / 2)
+                                    .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
                                     .build());
                     break;
             }

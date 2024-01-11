@@ -11,22 +11,53 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
     private DcMotorEx arm;
-    private Servo leftClaw, rightClaw;
+    private Servo leftClaw, rightClaw, wrist;
+
+    private boolean leftClawDown, rightClawDown;
 
     public Claw(HardwareMap hardwareMap) {
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         leftClaw = hardwareMap.get(Servo.class, "Left Pickup");
         rightClaw = hardwareMap.get(Servo.class, "Right Pickup");
+        wrist = hardwareMap.get(Servo.class, "wrist");
     }
 
     public Action moveArm(int position) {
         return new Action() {
-
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 int error = position - arm.getCurrentPosition();
                 arm.setPower(error / 300.0);
                 return Math.abs(error) > 10;
+            }
+        };
+    }
+    public Action moveWrist(double position) {
+        return new Action() {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                wrist.setPosition(position);
+                return false;
+            }
+        };
+    }
+
+    public Action closeLeftClaw(boolean closed) {
+        return new Action() {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                leftClaw.setPosition(closed ? 1 : 0);
+                return false;
+            }
+        };
+    }
+
+    public Action closeRightClaw(boolean closed) {
+        return new Action() {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                rightClaw.setPosition(closed ? 0 : 1);
+                return false;
             }
         };
     }
