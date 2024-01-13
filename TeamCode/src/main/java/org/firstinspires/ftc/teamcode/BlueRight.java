@@ -27,7 +27,7 @@ public class BlueRight extends LinearOpMode {
         Servo hookArm = hardwareMap.get(Servo.class, "Hook Arm");
 
         waitForStart();
-
+        Claw claw = new Claw(hardwareMap);
         hookArm.setPosition(.55);
 
         int propPosition = pipeline.GetPropPosition();
@@ -40,14 +40,19 @@ public class BlueRight extends LinearOpMode {
                                     .splineToLinearHeading(new Pose2d(-38, 32, Math.PI), 0)
 
                                     // Place Purple Pixel
-                                    .stopAndAdd(new SleepAction(.5))
+                                    .stopAndAdd(claw.closeLeftClaw(false))
 
                                     .setTangent(Math.PI / 8)
                                     .splineToConstantHeading(new Vector2d(-10, 36.0), 0)
-                                    .splineToConstantHeading(new Vector2d(36.0, 31.0), 0)
+                                    .splineToConstantHeading(new Vector2d(47.0, 28.0), 0)
 
                                     // Place yellow pixel
+                                    .stopAndAdd(claw.moveWrist(0))
+                                    .stopAndAdd(claw.moveArm(2250))
                                     .stopAndAdd(new SleepAction(.5))
+                                    .stopAndAdd(claw.closeRightClaw(false))
+                                    .stopAndAdd(new SleepAction(.5))
+                                    .strafeTo(new Vector2d(40.0, 31.0))
 
                                     .setTangent(Math.PI / 2)
                                     .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
@@ -61,15 +66,20 @@ public class BlueRight extends LinearOpMode {
                                     .splineToLinearHeading(new Pose2d(-38, 32, -Math.PI / 2), -Math.PI * .5)
 
                                     // Place Purple Pixel
-                                    .stopAndAdd(new SleepAction(.5))
+                                    .stopAndAdd(claw.closeLeftClaw(false))
 
                                     .setReversed(true)
                                     .splineToConstantHeading(new Vector2d(-30.0, 36), 0)
                                     .splineToConstantHeading(new Vector2d(0, 36), 0)
-                                    .splineToSplineHeading(new Pose2d(36.0, 31.0, Math.PI), 0)
+                                    .splineToSplineHeading(new Pose2d(47.0, 31.0, Math.PI), 0)
 
                                     // Place yellow pixel
+                                    .stopAndAdd(claw.moveWrist(0))
+                                    .stopAndAdd(claw.moveArm(2250))
                                     .stopAndAdd(new SleepAction(.5))
+                                    .stopAndAdd(claw.closeRightClaw(false))
+                                    .stopAndAdd(new SleepAction(.5))
+                                    .strafeTo(new Vector2d(40.0, 31.0))
 
                                     .setTangent(Math.PI / 2)
                                     .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
@@ -84,12 +94,17 @@ public class BlueRight extends LinearOpMode {
                                     .strafeTo(new Vector2d(-16, 36))
 
                                     // Place Purple Pixel
-                                    .stopAndAdd(new SleepAction(.5))
+                                    .stopAndAdd(claw.closeLeftClaw(false))
                                     .setTangent(0)
-                                    .splineToConstantHeading(new Vector2d(36.0, 31.0), 0)
+                                    .splineToConstantHeading(new Vector2d(47.0, 34.0), 0)
 
                                     // Place yellow pixel
+                                    .stopAndAdd(claw.moveWrist(0))
+                                    .stopAndAdd(claw.moveArm(2250))
                                     .stopAndAdd(new SleepAction(.5))
+                                    .stopAndAdd(claw.closeRightClaw(false))
+                                    .stopAndAdd(new SleepAction(.5))
+                                    .strafeTo(new Vector2d(40.0, 31.0))
 
                                     .setTangent(Math.PI / 2)
                                     .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)

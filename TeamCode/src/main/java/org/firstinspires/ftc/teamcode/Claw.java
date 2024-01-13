@@ -19,7 +19,17 @@ public class Claw {
         arm = hardwareMap.get(DcMotorEx.class, "arm");
         leftClaw = hardwareMap.get(Servo.class, "Left Pickup");
         rightClaw = hardwareMap.get(Servo.class, "Right Pickup");
-        wrist = hardwareMap.get(Servo.class, "wrist");
+        wrist = hardwareMap.get(Servo.class, "Wrist");
+
+        // Reset motor encoders
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Set positions of servos on class initialization
+        leftClaw.setPosition(1);
+        rightClaw.setPosition(0);
+        wrist.setPosition(.7);
     }
 
     public Action moveArm(int position) {
@@ -27,8 +37,8 @@ public class Claw {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 int error = position - arm.getCurrentPosition();
-                arm.setPower(error / 300.0);
-                return Math.abs(error) > 10;
+                arm.setPower(error / 600.0);
+                return Math.abs(error) > 20;
             }
         };
     }
