@@ -19,17 +19,23 @@ public class RedRight extends LinearOpMode {
 
 
 
+
     @Override
     public void runOpMode() {
         propVision = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Webcam"), pipeline);
 
         Pose2d beginPose = new Pose2d(15, -62, Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
-        Servo hookArm = hardwareMap.get(Servo.class, "Hook Arm");
+        Servo Airplane = hardwareMap.get(Servo.class, "planeshooter");
+
+        Claw claw = new Claw(hardwareMap);
+        Airplane.setPosition(.5);
+
 
         waitForStart();
-        Claw claw = new Claw(hardwareMap);
-        hookArm.setPosition(.55);
+
+        Actions.runBlocking(claw.moveWrist(.7));
+
         int propPosition = pipeline.GetPropPosition();
         if(opModeIsActive()) {
             switch (propPosition) {
@@ -38,11 +44,11 @@ public class RedRight extends LinearOpMode {
                         drive.actionBuilder(new Pose2d(15, -62, Math.PI / 2))
                                 .stopAndAdd(claw.moveArm(20))
                                 .setTangent(0)
-                                .splineToLinearHeading(new Pose2d(8.0, -35.0, Math.PI), -Math.PI)
+                                .splineToLinearHeading(new Pose2d(8.0, -27.0, Math.PI), -Math.PI)
 
                                 // Place purple pixel
                                 .stopAndAdd(claw.closeLeftClaw(false))
-                                .strafeTo(new Vector2d(47.0, -27.0))
+                                .strafeTo(new Vector2d(50.0, -27.0))
 
                                 // Place yellow pixel
                                 .stopAndAdd(claw.moveWrist(0))
@@ -61,11 +67,12 @@ public class RedRight extends LinearOpMode {
                 case 2:
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .strafeToLinearHeading(new Vector2d(24,-24), Math.PI)
+                                    .strafeToLinearHeading(new Vector2d(24,-18), Math.PI)
 
                                     // Place purple pixel
+                                    .stopAndAdd(claw.closeLeftClaw(false))
 
-                                    .strafeTo(new Vector2d(47.0, -35.0))
+                                    .strafeTo(new Vector2d(50.0, -35.0))
 
                                     // Place yellow pixel
                                     .stopAndAdd(claw.moveWrist(0))
@@ -87,12 +94,12 @@ public class RedRight extends LinearOpMode {
                 case 1:
                     Actions.runBlocking(
                             drive.actionBuilder(beginPose)
-                                    .strafeToLinearHeading(new Vector2d(30,-34), -Math.PI)
+                                    .strafeToLinearHeading(new Vector2d(37,-27), -Math.PI)
 
                                     // Place purple pixel
                                     .stopAndAdd(claw.closeLeftClaw(false))
 
-                                    .strafeTo(new Vector2d(36, -31))
+                                    .strafeTo(new Vector2d(50, -43))
 
                                     // Place yellow pixel
                                     .stopAndAdd(claw.moveWrist(0))
@@ -101,6 +108,8 @@ public class RedRight extends LinearOpMode {
                                     .stopAndAdd(claw.closeRightClaw(false))
                                     .stopAndAdd(new SleepAction(.5))
                                     .strafeTo(new Vector2d(40.0, -31.0))
+                                    .stopAndAdd(claw.moveArm(50))
+
 
                                     .setTangent(-Math.PI / 2)
                                     .splineToConstantHeading(new Vector2d(52.0, -60.0), 0.0)

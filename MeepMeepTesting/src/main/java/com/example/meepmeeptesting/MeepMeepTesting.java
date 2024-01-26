@@ -20,22 +20,26 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(
-                myBot.getDrive().actionBuilder(new Pose2d(15, -62, Math.PI / 2))
-                        .strafeToLinearHeading(new Vector2d(30,-34), -Math.PI)
+                myBot.getDrive().actionBuilder(new Pose2d(15, -62, -Math.PI / 2))
+
+                        .splineToLinearHeading(new Pose2d(8.0, -27.0, Math.PI), -Math.PI)
 
                         // Place purple pixel
 
-                        .strafeTo(new Vector2d(36, -31))
+                        .strafeTo(new Vector2d(50.0, -35.0))
 
                         // Place yellow pixel
-
                         .stopAndAdd(new SleepAction(.5))
                         .stopAndAdd(new SleepAction(.5))
                         .strafeTo(new Vector2d(40.0, -31.0))
 
+                        .strafeTo(new Vector2d(40.0, -31.0))
+
+
                         .setTangent(-Math.PI / 2)
                         .splineToConstantHeading(new Vector2d(52.0, -60.0), 0.0)
                         .build());
+
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)

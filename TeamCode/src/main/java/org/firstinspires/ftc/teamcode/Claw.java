@@ -27,9 +27,9 @@ public class Claw {
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set positions of servos on class initialization
-        leftClaw.setPosition(1);
         rightClaw.setPosition(0);
-        wrist.setPosition(.7);
+        leftClaw.setPosition(1);
+        wrist.setPosition(0);
     }
 
     public Action moveArm(int position) {

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -16,20 +18,20 @@ public class BlueLeft extends LinearOpMode {
     VisionPortal propVision;
     PropProcessor pipeline = new PropProcessor(telemetry);
 
-
-
     @Override
     public void runOpMode() {
         propVision = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Webcam"), pipeline);
-
         Pose2d beginPose = new Pose2d(15, 62, -Math.PI / 2);
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
+        Claw claw = new Claw(hardwareMap);
 
-        Servo hookArm = hardwareMap.get(Servo.class, "Hook Arm");
+        Servo Airplane = hardwareMap.get(Servo.class, "planeshooter");
+        Airplane.setPosition(.5);
 
         waitForStart();
-        Claw claw = new Claw(hardwareMap);
-        hookArm.setPosition(.55);
+
+        Actions.runBlocking(claw.moveWrist(.7));
+
         int propPosition = pipeline.GetPropPosition();
         if(opModeIsActive()) {
             switch (propPosition) {
@@ -38,12 +40,12 @@ public class BlueLeft extends LinearOpMode {
                             drive.actionBuilder(beginPose)
                                     .stopAndAdd(claw.moveArm(20))
                                     .setTangent(0)
-                                    .splineToLinearHeading(new Pose2d(8.0, 35.0, Math.PI), -Math.PI)
+                                    .splineToLinearHeading(new Pose2d(8.0, 32.0, Math.PI), -Math.PI)
 
                                     // Place purple pixel
                                     .stopAndAdd(claw.closeLeftClaw(false))
 
-                                    .strafeTo(new Vector2d(47.0, 27.0))
+                                    .strafeTo(new Vector2d(49.0, 28.0))
 
                                     // Place yellow pixel
                                     .stopAndAdd(claw.moveWrist(0))
@@ -51,8 +53,9 @@ public class BlueLeft extends LinearOpMode {
                                     .stopAndAdd(new SleepAction(.5))
                                     .stopAndAdd(claw.closeRightClaw(false))
                                     .stopAndAdd(new SleepAction(.5))
+                                    .stopAndAdd(claw.moveArm(30))
                                     .strafeTo(new Vector2d(40.0, 31.0))
-                                    .stopAndAdd(claw.moveArm(0))
+
 
                                     .setTangent(Math.PI / 2)
                                     .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
@@ -68,7 +71,7 @@ public class BlueLeft extends LinearOpMode {
                                     // Place purple pixel
                                     .stopAndAdd(claw.closeLeftClaw(false))
 
-                                    .strafeTo(new Vector2d(47.0, 35.0))
+                                    .strafeTo(new Vector2d(49.0, 37.0))
 
                                     // Place yellow pixel
                                     .stopAndAdd(claw.moveWrist(0))
@@ -94,12 +97,14 @@ public class BlueLeft extends LinearOpMode {
 
                                     // Place purple pixel
                                     .stopAndAdd(claw.closeLeftClaw(false))
+                                    .stopAndAdd(new SleepAction(.5))
 
-                                    .strafeTo(new Vector2d(47, 40))
+
+                                    .strafeTo(new Vector2d(48, 42))
 
                                     // Place yellow pixel
                                     .stopAndAdd(claw.moveWrist(0))
-                                    .stopAndAdd(claw.moveArm(2400))
+                                    .stopAndAdd(claw.moveArm(2550))
                                     .stopAndAdd(new SleepAction(.5))
                                     .stopAndAdd(claw.closeRightClaw(false))
                                     .stopAndAdd(new SleepAction(1))
