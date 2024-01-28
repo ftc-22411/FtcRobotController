@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
     private DcMotorEx arm;
+    private int armTargetPosition = 10;
     private Servo leftClaw, rightClaw, wrist;
 
     private boolean leftClawDown, rightClawDown;
@@ -37,7 +38,6 @@ public class Claw {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 int error = position - arm.getCurrentPosition();
-                arm.setPower(error / 600.0);
                 return Math.abs(error) > 20;
             }
         };
@@ -68,6 +68,17 @@ public class Claw {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 rightClaw.setPosition(closed ? 0 : 1);
                 return false;
+            }
+        };
+    }
+
+    public Action ApplyArmMotors() {
+        return new Action() {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                int error = armTargetPosition - arm.getCurrentPosition();
+                arm.setPower(error / 600.0);
+                return true;
             }
         };
     }

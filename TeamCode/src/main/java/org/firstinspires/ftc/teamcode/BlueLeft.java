@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -33,86 +32,98 @@ public class BlueLeft extends LinearOpMode {
         Actions.runBlocking(claw.moveWrist(.7));
 
         int propPosition = pipeline.GetPropPosition();
-        if(opModeIsActive()) {
+        if (opModeIsActive()) {
             switch (propPosition) {
                 case 1:
                     Actions.runBlocking(
-                            drive.actionBuilder(beginPose)
-                                    .stopAndAdd(claw.moveArm(20))
-                                    .setTangent(0)
-                                    .splineToLinearHeading(new Pose2d(8.0, 32.0, Math.PI), -Math.PI)
+                            new ParallelAction(
+                                    claw.ApplyArmMotors(),
+                                    drive.actionBuilder(beginPose)
+                                            .stopAndAdd(claw.moveArm(20))
+                                            .setTangent(0)
+                                            .splineToLinearHeading(new Pose2d(8.0, 32.0, Math.PI), -Math.PI)
 
-                                    // Place purple pixel
-                                    .stopAndAdd(claw.closeLeftClaw(false))
+                                            // Place purple pixel
+                                            .stopAndAdd(claw.closeLeftClaw(false))
 
-                                    .strafeTo(new Vector2d(49.0, 28.0))
+                                            .strafeTo(new Vector2d(49.0, 28.0))
 
-                                    // Place yellow pixel
-                                    .stopAndAdd(claw.moveWrist(0))
-                                    .stopAndAdd(claw.moveArm(2400))
-                                    .stopAndAdd(new SleepAction(.5))
-                                    .stopAndAdd(claw.closeRightClaw(false))
-                                    .stopAndAdd(new SleepAction(.5))
-                                    .stopAndAdd(claw.moveArm(30))
-                                    .strafeTo(new Vector2d(40.0, 31.0))
+                                            // Place yellow pixel
+                                            .stopAndAdd(claw.moveWrist(0))
+                                            .stopAndAdd(claw.moveArm(2400))
+                                            .stopAndAdd(new SleepAction(.5))
+                                            .stopAndAdd(claw.closeRightClaw(false))
+                                            .stopAndAdd(new SleepAction(.5))
+                                            .stopAndAdd(claw.moveArm(30))
+                                            .strafeTo(new Vector2d(40.0, 31.0))
 
 
-                                    .setTangent(Math.PI / 2)
-                                    .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
-                                    .build());
+                                            .setTangent(Math.PI / 2)
+                                            .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
+                                            .build()
+                            )
+                    );
                     break;
 
                 case 2:
                     Actions.runBlocking(
-                            drive.actionBuilder(beginPose)
-                                    .stopAndAdd(claw.moveArm(20))
-                                    .strafeToLinearHeading(new Vector2d(24,24), Math.PI)
+                            new ParallelAction(
+                                    claw.ApplyArmMotors(),
+                                    drive.actionBuilder(beginPose)
+                                            .stopAndAdd(claw.moveArm(20))
+                                            .strafeToLinearHeading(new Vector2d(24, 24), Math.PI)
 
-                                    // Place purple pixel
-                                    .stopAndAdd(claw.closeLeftClaw(false))
+                                            // Place purple pixel
+                                            .stopAndAdd(claw.closeLeftClaw(false))
 
-                                    .strafeTo(new Vector2d(49.0, 37.0))
+                                            .strafeTo(new Vector2d(49.0, 37.0))
 
-                                    // Place yellow pixel
-                                    .stopAndAdd(claw.moveWrist(0))
-                                    .stopAndAdd(claw.moveArm(2400))
-                                    .stopAndAdd(new SleepAction(.5))
-                                    .stopAndAdd(claw.closeRightClaw(false))
-                                    .stopAndAdd(new SleepAction(.5))
+                                            // Place yellow pixel
+                                            .stopAndAdd(claw.moveWrist(0))
+                                            .stopAndAdd(claw.moveArm(2400))
+                                            .stopAndAdd(new SleepAction(.5))
+                                            .stopAndAdd(claw.closeRightClaw(false))
+                                            .stopAndAdd(new SleepAction(.5))
 
-                                    .strafeTo(new Vector2d(40.0, 31.0))
-                                    .stopAndAdd(claw.moveArm(0))
+                                            .strafeTo(new Vector2d(40.0, 31.0))
+                                            .stopAndAdd(claw.moveArm(0))
 
 
-                                    .setTangent(Math.PI / 2)
-                                    .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
-                                    .build());
+                                            .setTangent(Math.PI / 2)
+                                            .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
+                                            .build()
+                            )
+                    );
                     break;
 
                 case 3:
                     Actions.runBlocking(
-                            drive.actionBuilder(beginPose)
-                                    .stopAndAdd(claw.moveArm(20))
-                                    .strafeToLinearHeading(new Vector2d(36,34), Math.PI)
+                            new ParallelAction(
+                                    claw.ApplyArmMotors(),
+                                    drive.actionBuilder(beginPose)
+                                            .stopAndAdd(claw.moveArm(20))
+                                            .strafeToLinearHeading(new Vector2d(36, 34), Math.PI)
 
-                                    // Place purple pixel
-                                    .stopAndAdd(claw.closeLeftClaw(false))
-                                    .stopAndAdd(new SleepAction(.5))
+                                            // Place purple pixel
+                                            .stopAndAdd(claw.closeLeftClaw(false))
+                                            .stopAndAdd(new SleepAction(.5))
 
 
-                                    .strafeTo(new Vector2d(48, 42))
+                                            .strafeTo(new Vector2d(48, 42))
 
-                                    // Place yellow pixel
-                                    .stopAndAdd(claw.moveWrist(0))
-                                    .stopAndAdd(claw.moveArm(2550))
-                                    .stopAndAdd(new SleepAction(.5))
-                                    .stopAndAdd(claw.closeRightClaw(false))
-                                    .stopAndAdd(new SleepAction(1))
-                                    .stopAndAdd(claw.moveArm(100))
+                                            // Place yellow pixel
+                                            .stopAndAdd(claw.moveWrist(0))
+                                            .stopAndAdd(claw.moveArm(2550))
+                                            .stopAndAdd(new SleepAction(.5))
+                                            .stopAndAdd(claw.closeRightClaw(false))
+                                            .stopAndAdd(new SleepAction(1))
+                                            .stopAndAdd(claw.moveArm(100))
 
-                                    .setTangent(Math.PI / 2)
-                                    .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
-                                    .build());
+                                            .setTangent(Math.PI / 2)
+                                            .splineToConstantHeading(new Vector2d(52.0, 60.0), 0.0)
+                                            .build()
+                            )
+                    );
                     break;
             }
         }
