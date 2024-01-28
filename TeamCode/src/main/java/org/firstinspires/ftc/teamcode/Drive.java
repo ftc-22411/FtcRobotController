@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.gamepad.GamepadEx;
+
 @TeleOp(name = "Drive")
 public class Drive extends LinearOpMode {
 
@@ -20,6 +22,8 @@ public class Drive extends LinearOpMode {
         float vertical;
         float horizontal;
         float speed = .5f;
+
+        GamepadEx armPad = new GamepadEx(gamepad2);
 
         DcMotor frontLeft = hardwareMap.get(DcMotor.class, "frontleft");
         DcMotor backLeft = hardwareMap.get(DcMotor.class, "backleft");
@@ -37,9 +41,10 @@ public class Drive extends LinearOpMode {
 
         Servo wrist = hardwareMap.get(Servo.class, "Wrist");
 
-        int pickPos = 1;
+        int leftClawPos = 0;
+        int rightClawPos = 1;
+
         int armPos = arm.getCurrentPosition();
-        boolean pickPrevValue = false;
         double planePos = .5;
         boolean planePrevValue = false;
 
@@ -55,6 +60,7 @@ public class Drive extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
+            armPad.Update();
             // Put loop blocks here.
 
 
@@ -71,19 +77,19 @@ public class Drive extends LinearOpMode {
             else if (gamepad1.b) speed = .25f;
             else if (gamepad1.x) speed = 1f;
 
-            if (!pickPrevValue && gamepad2.b) {
-                pickPos = pickPos == 1 ? 0 : 1;
-            }
-
             if (!planePrevValue && gamepad2.a) {
                 planePos = planePos == .5 ? 1 : .5;
             }
             planeShooter.setPosition(planePos);
             planePrevValue = gamepad2.a;
 
-            pickPrevValue = gamepad2.b;
-            leftPickup.setPosition(1 - pickPos);
-            rightPickup.setPosition(pickPos);
+            if(armPad.GetButtonJustPressed(GamepadEx.Buttons.B))
+                rightClawPos = rightClawPos == 0 ? 1 : 0;
+            if(armPad.GetButtonJustPressed(GamepadEx.Buttons.Y))
+                leftClawPos = leftClawPos == 0 ? 1 : 0;
+
+            leftPickup.setPosition(leftClawPos);
+            rightPickup.setPosition(rightClawPos);
 
             armPos += ((gamepad2.dpad_up ? 10 : 0) -
                     (gamepad2.dpad_down && armPos > 10 ? 10 : 0));
@@ -99,7 +105,7 @@ public class Drive extends LinearOpMode {
 
             TelemetryPacket packet = new TelemetryPacket();
             packet.put("Arm Pos", arm.getCurrentPosition());
-            packet.put("Pick Pos", pickPos);
+//            packet.put("Pick Pos", pickPos);
             packet.put("Plane Pos", planePos);
             packet.put("Wrist Pos", wrist.getPosition());
 
