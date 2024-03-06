@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -29,7 +30,7 @@ public class RedRight extends LinearOpMode {
         Servo Airplane = hardwareMap.get(Servo.class, "planeshooter");
 
         Claw claw = new Claw(hardwareMap);
-        Airplane.setPosition(.5);
+        Airplane.setPosition(1);
 
 
         waitForStart();
@@ -41,6 +42,8 @@ public class RedRight extends LinearOpMode {
             switch (propPosition) {
                 case 3:
                     Actions.runBlocking(
+                            new ParallelAction(
+                                    claw.ApplyArmMotors(),
                         drive.actionBuilder(new Pose2d(15, -62, Math.PI / 2))
                                 .stopAndAdd(claw.moveArm(20))
                                 .setTangent(0)
@@ -48,11 +51,11 @@ public class RedRight extends LinearOpMode {
 
                                 // Place purple pixel
                                 .stopAndAdd(claw.closeLeftClaw(false))
-                                .strafeTo(new Vector2d(50.0, -27.0))
+                                .strafeTo(new Vector2d(5.0, -27.0))
 
                                 // Place yellow pixel
                                 .stopAndAdd(claw.moveWrist(0))
-                                .stopAndAdd(claw.moveArm(2400))
+                                .stopAndAdd(claw.moveArm(3050))
                                 .stopAndAdd(new SleepAction(.5))
                                 .stopAndAdd(claw.closeRightClaw(false))
                                 .stopAndAdd(new SleepAction(.5))
@@ -61,11 +64,13 @@ public class RedRight extends LinearOpMode {
 
                                 .setTangent(-Math.PI / 2)
                                 .splineToConstantHeading(new Vector2d(52.0, -60.0), 0.0)
-                                .build());
+                                .build()));
                     break;
 
                 case 2:
                     Actions.runBlocking(
+                            new ParallelAction(
+                                    claw.ApplyArmMotors(),
                             drive.actionBuilder(beginPose)
                                     .strafeToLinearHeading(new Vector2d(24,-18), Math.PI)
 
@@ -76,7 +81,7 @@ public class RedRight extends LinearOpMode {
 
                                     // Place yellow pixel
                                     .stopAndAdd(claw.moveWrist(0))
-                                    .stopAndAdd(claw.moveArm(2400))
+                                    .stopAndAdd(claw.moveArm(2700))
                                     .stopAndAdd(new SleepAction(.5))
                                     .stopAndAdd(claw.closeRightClaw(false))
                                     .stopAndAdd(new SleepAction(.5))
@@ -88,11 +93,13 @@ public class RedRight extends LinearOpMode {
 
                                     .setTangent(-Math.PI / 2)
                                     .splineToConstantHeading(new Vector2d(52.0, -60.0), 0.0)
-                                    .build());
+                                    .build()));
                     break;
 
                 case 1:
                     Actions.runBlocking(
+                            new ParallelAction(claw.ApplyArmMotors(),
+
                             drive.actionBuilder(beginPose)
                                     .strafeToLinearHeading(new Vector2d(37,-27), -Math.PI)
 
@@ -103,7 +110,7 @@ public class RedRight extends LinearOpMode {
 
                                     // Place yellow pixel
                                     .stopAndAdd(claw.moveWrist(0))
-                                    .stopAndAdd(claw.moveArm(2250))
+                                    .stopAndAdd(claw.moveArm(2700))
                                     .stopAndAdd(new SleepAction(.5))
                                     .stopAndAdd(claw.closeRightClaw(false))
                                     .stopAndAdd(new SleepAction(.5))
@@ -113,7 +120,7 @@ public class RedRight extends LinearOpMode {
 
                                     .setTangent(-Math.PI / 2)
                                     .splineToConstantHeading(new Vector2d(52.0, -60.0), 0.0)
-                                    .build());
+                                    .build()));
                     break;
             }
         }

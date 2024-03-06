@@ -7,19 +7,28 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Drive")
 public class Drive extends LinearOpMode {
 
     private DcMotor arm;
-    private final double kP = .005;
+    private final double kP = .003;
+    private final double kI = 0;
+    double P_term;
+
+
+
+    private final double kD = 0;
 
     @Override
     public void runOpMode() {
         float angle;
         float vertical;
         float horizontal;
-        float speed = .5f;
+        float speed = .75f;
 
         DcMotor frontLeft = hardwareMap.get(DcMotor.class, "frontleft");
         DcMotor backLeft = hardwareMap.get(DcMotor.class, "backleft");
@@ -36,11 +45,21 @@ public class Drive extends LinearOpMode {
         Servo hookArm = hardwareMap.get(Servo.class, "Hook Arm");
 
         Servo wrist = hardwareMap.get(Servo.class, "Wrist");
+        ColorSensor Color1 = hardwareMap.get(ColorSensor.class, "color");
+        ColorSensor Color2 = hardwareMap.get(ColorSensor.class, "color2");
 
-        int pickPos = 1;
+
+        double pickPos = .73;
+        double pickPos2 = .3;
         int armPos = arm.getCurrentPosition();
+        double wristMin = .67;
+        double wristMax = .83;
+        double wristPos;
+
         boolean pickPrevValue = false;
-        double planePos = .5;
+        boolean pickPrevValueLeft = false;
+
+        double planePos = 1;
         boolean planePrevValue = false;
 
 
@@ -49,7 +68,10 @@ public class Drive extends LinearOpMode {
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 
@@ -67,35 +89,54 @@ public class Drive extends LinearOpMode {
             backLeft.setPower((angle + (vertical - horizontal)) * speed);
 
 
-            if (gamepad1.a) speed = .5f;
-            else if (gamepad1.b) speed = .25f;
+            if (gamepad1.a) speed = .75f;
+            else if (gamepad1.b) speed = .33f;
             else if (gamepad1.x) speed = 1f;
 
-            if (!pickPrevValue && gamepad2.b) {
-                pickPos = pickPos == 1 ? 0 : 1;
+            if (!pickPrevValue && gamepad2.right_bumper) {
+                pickPos = pickPos == .73 ? .3 : .73;
+
             }
 
+            if (!pickPrevValueLeft && gamepad2.left_bumper) {
+                pickPos2 = pickPos2 == .7 ? .3 : .7;
+            }
+            if (((OpticalDistanceSensor) Color2).getLightDetected() >= .6 && !gamepad2.right_bumper){
+                pickPos = .3;
+            }
+            if (((OpticalDistanceSensor) Color1).getLightDetected() >= .6 && !gamepad2.left_bumper){
+                pickPos2 = .7;
+            }
+
+
+
             if (!planePrevValue && gamepad2.a) {
-                planePos = planePos == .5 ? 1 : .5;
+                planePos = planePos == 0 ? 1 : 0;
             }
             planeShooter.setPosition(planePos);
             planePrevValue = gamepad2.a;
-
-            pickPrevValue = gamepad2.b;
-            leftPickup.setPosition(1 - pickPos);
+            leftPickup.setPosition(pickPos2);
             rightPickup.setPosition(pickPos);
 
+            pickPrevValue = gamepad2.right_bumper;
+            pickPrevValueLeft = gamepad2.left_bumper;
             armPos += ((gamepad2.dpad_up ? 10 : 0) -
                     (gamepad2.dpad_down && armPos > 10 ? 10 : 0));
 
             hook.setPower((gamepad1.dpad_up ? 1 : 0) -
                     (gamepad1.dpad_down ? 1 : 0));
+            wrist.setPosition(wristMin + (wristMax - wristMin) * gamepad2.left_trigger);
 
-            wrist.setPosition((1 - (gamepad2.right_trigger)) * .60);
 
-            hookArm.setPosition(gamepad1.left_bumper ? .3 : .83);
+            hookArm.setPosition(gamepad1.left_bumper ? .22 : .83);
+
+
 
             moveArmToPos(armPos);
+            telemetry.addData("P_term", kP);
+            telemetry.addData("Wrist Pos", wrist.getPosition());
+            telemetry.addData("armPos", arm.getCurrentPosition());
+
 
             TelemetryPacket packet = new TelemetryPacket();
             packet.put("Arm Pos", arm.getCurrentPosition());
@@ -105,10 +146,14 @@ public class Drive extends LinearOpMode {
 
             FtcDashboard dashboard = FtcDashboard.getInstance();
             dashboard.sendTelemetryPacket(packet);
+            telemetry.update();
         }
     }
     void moveArmToPos(int targetPos) {
         int error = targetPos - arm.getCurrentPosition();
-        arm.setPower(error * kP);
+
+        P_term = (error * kP);
+        arm.setPower(P_term);
+
     }
 }

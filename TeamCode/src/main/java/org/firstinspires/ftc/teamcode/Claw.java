@@ -37,7 +37,8 @@ public class Claw {
         return new Action() {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                int error = position - arm.getCurrentPosition();
+                armTargetPosition = position;
+                int error = armTargetPosition - arm.getCurrentPosition();
                 return Math.abs(error) > 20;
             }
         };
@@ -77,7 +78,7 @@ public class Claw {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 int error = armTargetPosition - arm.getCurrentPosition();
-                arm.setPower(error / 600.0);
+                arm.setPower(error / 800.0);
                 return true;
             }
         };
