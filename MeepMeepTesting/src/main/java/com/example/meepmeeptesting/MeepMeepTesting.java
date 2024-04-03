@@ -20,27 +20,32 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(
-                myBot.getDrive().actionBuilder(new Pose2d(-32, 62, -Math.PI / 2))
-                        .setTangent(-Math.PI * .6)
-                        .splineToLinearHeading(new Pose2d(-45, 24, 0), -Math.PI * .5)
+                myBot.getDrive().actionBuilder(new Pose2d(-32, -62, Math.PI / 2))
+                        .setTangent(Math.PI)
+                        .splineToLinearHeading(new Pose2d(-44, -6, -Math.PI /2), Math.PI * .5)
+                        .setTangent(-Math.PI / 2)
+                        .splineToConstantHeading(new Vector2d(-38, -12), Math.PI * .5)
 
                         // Place Purple Pixel
-
+                        //  .stopAndAdd(claw.closeLeftClaw(false))
 
                         .setReversed(true)
-
-                        .splineToConstantHeading(new Vector2d(-30.0, 10), 0)
-                        .setTangent(Math.PI / 11)
-                        .splineToConstantHeading(new Vector2d(20, 10), 0)
-                        .splineToSplineHeading(new Pose2d(47.0, 31.0, Math.PI), 0)
+                        .setTangent(Math.PI / 5)
+                        .strafeTo(new Vector2d(51.0, -12.0))
 
                         // Place yellow pixel
+                        //  .stopAndAdd(claw.moveWrist(0))
+                        //  .stopAndAdd(claw.moveArm(3000))
+                        .splineToLinearHeading(new Pose2d(51, -20 , Math.PI ), Math.PI/2)
                         .stopAndAdd(new SleepAction(.5))
+                        // .stopAndAdd(claw.closeRightClaw(false))
                         .stopAndAdd(new SleepAction(.5))
-                        .strafeTo(new Vector2d(40.0, 31.0))
+                        .strafeTo(new Vector2d(40.0, -31.0))
 
-                        .setTangent(Math.PI )
-                        .splineToConstantHeading(new Vector2d(52.0, 10.0), 0.0)
+                        //  .stopAndAdd(claw.moveArm(10))
+
+                        .setTangent(-Math.PI)
+                        .splineToConstantHeading(new Vector2d(52.0, -10.0), 0.0)
                         .build());
 
 
