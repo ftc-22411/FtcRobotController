@@ -15,10 +15,12 @@ buildscript {
         mavenCentral()
         maven {
             url = 'https://www.matthewo.tech/maven/'
+
         }
     }
     dependencies {
         classpath 'org.team11260:fast-load-plugin:0.1.1'
+
     }
 }
 
@@ -50,4 +52,5 @@ dependencies {
     implementation "com.acmerobotics.roadrunner:ftc:0.1.11"
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.14'
     implementation 'org.team11260:fast-load:0.1.1'
+    implementation 'org.ftclib.ftclib:core:2.0.1'
 }

@@ -16,7 +16,7 @@ public class PropProcessor implements VisionProcessor {
 	private int propPosition = 0;
 	private static final Rect LEFT_RECT = new Rect(0, 0, 120, 95);
 	private static final Rect CENTER_RECT = new Rect(270, 60, 100, 75);
-	private static final Rect RIGHT_RECT = new Rect(520, 0, 120, 95);
+	private static final Rect RIGHT_RECT = new Rect(520, 30, 120, 95);
 
 	Telemetry telemetry;
 	public PropProcessor(Telemetry telemetry) {
